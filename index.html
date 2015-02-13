@@ -1,0 +1,45 @@
+<!doctype html>
+<html ng-app="multitwitchApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MultiTwitch</title>
+
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+    <link rel="stylesheet" href="css/side-menu.css">
+</head>
+
+<body ng-controller="multitwitchController">
+<div>
+<div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div class="pure-menu pure-menu-open">
+            <a class="pure-menu-heading" href="#">Streamers</a>
+
+            <ul>
+                <li><a href="#">arteezy</a></li>
+                <li><a href="#">moonmeander</a></li>
+                <li><a href="#">merlini</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="main">
+        <div class="content" id="streamcontainer">
+            <p> what the hell </p>
+        </div>
+    </div>
+    <iframe src="http://www.twitch.tv/moonmeander/embed" scrolling="no" height="400px" width="400px"></iframe> 
+</div>
+    </div>
+    
+    <script src="js/ui.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+</body>
+</html>
