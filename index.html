@@ -13,19 +13,22 @@
 
 <body>
     <div ng-app="multiTwitchApp" ng-controller="multiTwitchController">
-        <a href="#">Streamers</a>
-        <ul>
-            <li ng-repeat='stream in streamData.streams'>
-                <a ng-href="#{{stream.channel.display_name}}" ng-click="addStream(stream)">{{ stream.channel.display_name }}
+        <a ng-click="functions.clearGame()" href="#">Games</a>
+        <ul ng-if="!activeGame.show">
+            <li ng-repeat="game in gameData.top">
+                <a ng-href="#{{game.game.name}}" ng-click="functions.chooseGame(game.game)">{{ game.game.name }}
                 </a>
             </li>
         </ul>
-
-        <div> what is going on </div>
+        <ul ng-if="activeGame.show">
+            <li ng-repeat="stream in streamData.streams">
+            <a ng-click="functions.chooseStream(stream)" ng-href="#{{stream.channel.display_name}}">{{stream.channel.display_name}}</a>
+            </li>
+        </ul>
+        
         <div ng-if="activeStream.show">
-            <iframe id="player" type="text/html" width="300" height="300" ng-src="{{activeStream.channel.url | trusted}}" frameborder="0">{{activeStream.channel.url}}</iframe>
+            <iframe id="player" type="text/html" width="300" height="300" ng-src="{{activeStream.channel.url + '/embed' | trusted}}" frameborder="0">{{activeStream.channel.url}}</iframe>
         </div>
-        <div> {{activeStream.channel.url}} </div>
     </div>
 </body>
 </html>

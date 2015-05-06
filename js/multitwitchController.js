@@ -1,57 +1,79 @@
 var multiTwitchApp = angular.module('multiTwitchApp', []);
 
-multiTwitchApp.controller('multiTwitchController', function ($scope, streamDataFactory) {
-    
-    
-    $scope.streamData = {};
-    $scope.refreshStreams = function () {
-        streamDataFactory.getStreamData().then(
-            function (data) {
-                $scope.streamData = data;
-        });
+multiTwitchApp.controller('multiTwitchController', function($scope, dataFactory) {
+
+    $scope.functions = {};
+    $scope.functions.getGameData = function() {
+        dataFactory.getGames().then(
+            function(data) {
+                $scope.gameData = data;
+            });
     };
-    
-    $scope.refreshStreams();
-    
-    $scope.activeStream = {};
-    $scope.activeStream.show = false;
-    
-    $scope.addStream = function (stream) {
-        $scope.refreshStreams();
-        
-        if (!$scope.activeStream.channel){
-            //do nothing
-        }
-        else if (stream.channel._id === $scope.activeStream.channel._id){
-            return;
-        }
-        
+    $scope.functions.chooseGame = function(game) {
+        $scope.activeGame = game;
+        $scope.functions.getStreamData(game);
+        $scope.activeGame.show = true;
+    };
+    $scope.functions.clearGame = function() {
+        $scope.activeGame = {}
+        $scope.activeGame.show = false;
+    };
+    $scope.functions.getStreamData = function(game) {
+        dataFactory.getStreams(game).then(
+            function(data) {
+                $scope.streamData = data;
+            });
+    };
+    $scope.functions.chooseStream = function(stream) {
         $scope.activeStream = stream;
         $scope.activeStream.show = true;
-        $scope.activeStream.channel.url += "/embed";
+        $scope.functions.getStreamData($scope.activeGame);
     };
+
+    $scope.gameData = {};
+    $scope.streamData = {};
+    $scope.activeGame = {};
+    $scope.activeStream = {};
+    $scope.activeGame.show = false;
+    $scope.activeStream.show = false;
+    
+    $scope.functions.getGameData();
 });
 
-
-multiTwitchApp.factory('streamDataFactory', function ($http, $q) {
-    return {
-        getStreamData: function () {
+multiTwitchApp.factory('dataFactory', ['$http', '$q', function($http, $q) {
+    
+        var factory = {};
+    
+        factory.getGames = function() {
             var deferred = $q.defer();
-        $http.jsonp('https://api.twitch.tv/kraken/streams?            game=Dota%202&callback=JSON_CALLBACK').
-   success(function(data) {
-      deferred.resolve(data);
-   }).
-   error(function(){
-      deferred.reject();
-   });
-   return deferred.promise;
-     }
-   }
-});
+            $http.jsonp('https://api.twitch.tv/kraken/games/top?callback=JSON_CALLBACK').
+            success(function(data) {
+                deferred.resolve(data);
+            }).
+            error(function() {
+                deferred.reject();
+            });
+            return deferred.promise;
+        };
+        
+        factory.getStreams = function(game) {
+            var deferred = $q.defer();
+            $http.jsonp('https://api.twitch.tv/kraken/streams?game=' + game.name + '&callback=JSON_CALLBACK').
+            success(function(data) {
+                deferred.resolve(data);
+            }).
+            error(function() {
+                deferred.reject();
+            });
+            return deferred.promise;
+        };
+    
+    return factory;
+}]);
 
 angular.module('multiTwitchApp')
-    .filter('trusted', ['$sce', function ($sce) {
-    return function(url) {
-        return $sce.trustAsResourceUrl(url);
-    };
-}]);
+    .filter('trusted', ['$sce', function($sce) {
+        return function(url) {
+            return $sce.trustAsResourceUrl(url);
+        };
+    }]);
