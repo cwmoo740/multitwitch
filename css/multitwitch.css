@@ -4,41 +4,44 @@
 
 body {
     background-color: black;
+    overflow: hidden;
 }
 
 #page {
-    max-width: 100%;
     margin: 0;
     padding: 0;
     height: 100vh;
+    width: 100vw;
 }
 
-#nav-bar-left {
+#left-col {
+    position: absolute;
+    left: 0;
     width: 150px;
-    height: 100vh;
-    float: left;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding-left: 0px;
-    text-overflow: clip;
+    height: 100%;
 }
 
 .side-nav-ul {
     width: 100%;
-    margin-left: 0;
+    height: 100%;
     list-style: none;
+    text-decoration: none;
     font-size: 0.85em;
-    text-align: center;
-    height: 100vh;
+    text-align: left;
+    padding: 0;
+    margin: 0;
 }
 
 .side-nav-ul li a {
+    text-decoration: none;
     width: 100%;
     height: 3em;
     color: #FFFFFF;
     display: block;
     overflow: hidden;
     line-height: 3em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
 }
 
 .side-nav-ul li a:hover, #back-button:hover {
@@ -46,12 +49,17 @@ body {
 }
 
 #back-button {
-    background-color: #6e6e6e;
+    height: 3em;
+    line-height: 3em;
+    display: block;
 }
 
 #content {
-    overflow: hidden;
-    height: 100vh;
+    height: 100%;
+    margin-left: 150px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-right: 340px;
 }
 
 .stream-container {
@@ -65,4 +73,17 @@ body {
     left: 0;
     width: 100%;
     height: 98%;
+}
+
+#right-col {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 340px;
+    height: 100%;
+}
+
+.chat-container {
+    width: 100%;
+    height: 100%;
 }

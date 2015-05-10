@@ -9,16 +9,15 @@
     <title>MultiTwitch</title>
     
     <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/foundation.css">
     <link rel="stylesheet" href="css/multitwitch.css">
 </head>
 
 <body>
-    <div class="row" id="page" ng-app="multiTwitchApp" ng-controller="multiTwitchController">
+    <div id="page" ng-app="multiTwitchApp" ng-controller="multiTwitchController">
         
         <!-- begin side-bar menu -->
         
-        <div id="nav-bar-left">
+        <div id="left-col">
         <ul class="side-nav-ul" ng-if="!activeGame.show">
             <li ng-repeat="game in gameData.top">
                 <a ng-href="#{{game.game.name}}" ng-click="functions.chooseGame(game.game)">{{ game.game.name }}
@@ -27,7 +26,7 @@
         </ul>
         <ul class="side-nav-ul" ng-if="activeGame.show">
             <li>
-                <a id="back-button" ng-click="functions.clearGame()" href="#">Games</a>
+                <a id="back-button" ng-click="functions.clearGame()" href="#">Back</a>
             </li>
             <li ng-repeat="stream in streamData.streams">
             <a ng-click="functions.chooseStream(stream)" ng-href="#{{stream.channel.display_name}}">{{stream.channel.display_name}}</a>
@@ -47,6 +46,18 @@
             </div>
         
         <!--end main content -->
+        
+        <!-- begin chat content -->
+        <div id="right-col" ng-show="activeStream.show">
+            <div class="chat-container">
+                <iframe frameborder="0" scrolling="no" id="chat_embed" src="{{activeStream.channel.url + '/chat' | trusted}}" height="100%" width="100%"></iframe>
+            </div>
+        
+        </div>
+        
+        <!-- end chat content -->
+        
+        
         
     </div>
 
