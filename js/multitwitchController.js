@@ -34,10 +34,11 @@ multiTwitchApp.controller('multiTwitchController', function($scope, dataFactory)
     $scope.streamData = {};
     $scope.activeGame = {};
     $scope.activeStream = {};
-    $scope.activeGame.show = false;
-    $scope.activeStream.show = false;
     
     $scope.functions.getGameData();
+    
+    $scope.activeGame.show = false;
+    $scope.activeStream.show = false;
 });
 
 multiTwitchApp.factory('dataFactory', ['$http', '$q', function($http, $q) {
