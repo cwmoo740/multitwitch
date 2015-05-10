@@ -48,7 +48,7 @@
         <!--end main content -->
         
         <!-- begin chat content -->
-        <div id="right-col" ng-show="activeStream.show">
+        <div id="right-col" ng-if="activeStream.show">
             <div class="chat-container">
                 <iframe frameborder="0" scrolling="no" id="chat_embed" src="{{activeStream.channel.url + '/chat' | trusted}}" height="100%" width="100%"></iframe>
             </div>
