@@ -1,0 +1,3 @@
+implement functions to hide nav and chat columns
+show more than 10 games
+allow scrolling on nav menu

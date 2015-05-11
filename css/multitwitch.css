@@ -42,6 +42,7 @@ body {
     line-height: 3em;
     padding-left: 0.5em;
     padding-right: 0.5em;
+    box-sizing: border-box;
 }
 
 .side-nav-ul li a:hover, #back-button:hover {
@@ -52,6 +53,60 @@ body {
     height: 3em;
     line-height: 3em;
     display: block;
+}
+
+.toggle {
+    z-index: 10;
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    text-indent: -999px;
+    overflow: hidden;
+    
+    margin: 0;
+    padding: 0;
+    
+    background-color: transparent;
+}
+
+.toggle::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin-top: -6px;
+    z-index: 2;
+    
+    margin-left: -10px;
+    border: 6px solid white;
+}
+
+#toggle-left-col {
+    top: 0.6em;
+    left: 150px;
+}
+
+#toggle-left-col::before {
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+}
+
+#toggle-right-col {
+    top: 0.6em;
+    right: 340px;
+}
+
+#toggle-right-col::before {
+    border-right-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
 }
 
 #content {

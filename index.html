@@ -18,6 +18,7 @@
         <!-- begin side-bar menu -->
         
         <div id="left-col">
+            <a id="toggle-left-col" class="toggle" ng-click="functions.toggleLeftCol()">what</a>
         <ul class="side-nav-ul" ng-if="!activeGame.show">
             <li ng-repeat="game in gameData.top">
                 <a ng-href="#{{game.game.name}}" ng-click="functions.chooseGame(game.game)">{{ game.game.name }}
@@ -49,6 +50,7 @@
         
         <!-- begin chat content -->
         <div id="right-col" ng-if="activeStream.show">
+            <a id="toggle-right-col" class="toggle" ng-click="functions.toggleRightCol()">what</a>
             <div class="chat-container">
                 <iframe frameborder="0" scrolling="no" id="chat_embed" src="{{activeStream.channel.url + '/chat' | trusted}}" height="100%" width="100%"></iframe>
             </div>

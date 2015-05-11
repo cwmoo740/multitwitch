@@ -29,6 +29,12 @@ multiTwitchApp.controller('multiTwitchController', function($scope, dataFactory)
         $scope.activeStream.show = true;
         $scope.functions.getStreamData($scope.activeGame);
     };
+    $scope.functions.toggleNav = function() {
+        
+    };
+    $scope.functions.toggleChat = function() {
+        
+    };
 
     $scope.gameData = {};
     $scope.streamData = {};
