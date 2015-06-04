@@ -29,17 +29,29 @@ multiTwitchApp.controller('multiTwitchController', function($scope, dataFactory)
         $scope.activeStream.show = true;
         $scope.functions.getStreamData($scope.activeGame);
     };
-    $scope.functions.toggleNav = function() {
-        
+    $scope.functions.toggleLeftCol = function() {
+        if ($scope.leftColWidth === 0){
+            $scope.leftColWidth = 150;
+        }
+        else {
+            $scope.leftColWidth = 0;
+        }
     };
-    $scope.functions.toggleChat = function() {
-        
+    $scope.functions.toggleRightCol = function() {
+        if ($scope.rightColWidth == 0){
+            $scope.rightColWidth = 340;
+        }
+        else {
+            $scope.rightColWidth = 0;
+        }
     };
 
     $scope.gameData = {};
     $scope.streamData = {};
     $scope.activeGame = {};
     $scope.activeStream = {};
+    $scope.rightColWidth = 340;
+    $scope.leftColWidth = 150;
     
     $scope.functions.getGameData();
     

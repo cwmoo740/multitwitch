@@ -1,24 +1,23 @@
 <!doctype html>
 <html>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-    <script src="js/multitwitchController.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="js/multitwitchController.js"></script>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>MultiTwitch</title>
-    
+
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/multitwitch.css">
 </head>
 
 <body>
-    <div id="page" ng-app="multiTwitchApp" ng-controller="multiTwitchController">
-        
-        <!-- begin side-bar menu -->
-        
-        <div id="left-col">
-            <a id="toggle-left-col" class="toggle" ng-click="functions.toggleLeftCol()">what</a>
+<div id="page" ng-app="multiTwitchApp" ng-controller="multiTwitchController">
+
+    <!-- begin side-bar menu -->
+
+    <div id="left-col" ng-style="{'width': leftColWidth + 'px'}">
         <ul class="side-nav-ul" ng-if="!activeGame.show">
             <li ng-repeat="game in gameData.top">
                 <a ng-href="#{{game.game.name}}" ng-click="functions.chooseGame(game.game)">{{ game.game.name }}
@@ -30,38 +29,46 @@
                 <a id="back-button" ng-click="functions.clearGame()" href="#">Back</a>
             </li>
             <li ng-repeat="stream in streamData.streams">
-            <a ng-click="functions.chooseStream(stream)" ng-href="#{{stream.channel.display_name}}">{{stream.channel.display_name}}</a>
+                <a ng-click="functions.chooseStream(stream)" ng-href="#{{stream.channel.display_name}}">{{stream.channel.display_name}}</a>
             </li>
         </ul>
-            </div>
-        <!-- end side-bar menu -->
-        
-        
-        <!-- begin main content -->
+    </div>
+    <a id="toggle-left-col" class="toggle" ng-click="functions.toggleLeftCol()"
+       ng-style="{'left': leftColWidth + 'px'}">what</a>
 
-        <div  id="content">
+    <!-- end side-bar menu -->
+
+
+    <!-- begin main content -->
+
+    <div id="content" ng-style="{'margin-left': leftColWidth + 'px', 'margin-right': rightColWidth + 'px'}">
         <div class="stream-container" ng-if="activeStream.show">
             <div class="iframe-click-blocker" ng-style="iframeClickBlockerCSS"></div>
-            <iframe id="player" type="text/html" width="100%" height="100%" ng-src="{{activeStream.channel.url + '/embed' | trusted}}" frameborder="0">{{activeStream.channel.url}}</iframe>
+            <iframe id="player" type="text/html" width="100%" height="100%"
+                    ng-src="{{activeStream.channel.url + '/embed' | trusted}}" frameborder="0">
+                {{activeStream.channel.url}}
+            </iframe>
         </div>
-            </div>
-        
-        <!--end main content -->
-        
-        <!-- begin chat content -->
-        <div id="right-col" ng-if="activeStream.show">
-            <a id="toggle-right-col" class="toggle" ng-click="functions.toggleRightCol()">what</a>
-            <div class="chat-container">
-                <iframe frameborder="0" scrolling="no" id="chat_embed" src="{{activeStream.channel.url + '/chat' | trusted}}" height="100%" width="100%"></iframe>
-            </div>
-        
-        </div>
-        
-        <!-- end chat content -->
-        
-        
-        
     </div>
+
+    <!--end main content -->
+
+    <!-- begin chat content -->
+    <div id="right-col" ng-if="activeStream.show" ng-style="{'width': rightColWidth + 'px'}">
+        <div class="chat-container">
+            <iframe frameborder="0" scrolling="no" id="chat_embed"
+                    src="{{activeStream.channel.url + '/chat' | trusted}}" height="100%" width="100%"></iframe>
+        </div>
+
+    </div>
+    <a id="toggle-right-col" class="toggle" ng-click="functions.toggleRightCol()"
+       ng-style="{'right': rightColWidth + 'px'}">what</a>
+
+
+    <!-- end chat content -->
+
+
+</div>
 
 </body>
 </html>
