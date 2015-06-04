@@ -43,7 +43,7 @@
 
     <div id="content" ng-style="{'margin-left': leftColWidth + 'px', 'margin-right': rightColWidth + 'px'}">
         <div class="stream-container" ng-if="activeStream.show">
-            <div class="iframe-click-blocker" ng-style="iframeClickBlockerCSS"></div>
+            <div class="iframe-click-blocker" ng-style="{'height': activeStream.height + 'px'"></div>
             <iframe id="player" type="text/html" width="100%" height="100%"
                     ng-src="{{activeStream.channel.url + '/embed' | trusted}}" frameborder="0">
                 {{activeStream.channel.url}}

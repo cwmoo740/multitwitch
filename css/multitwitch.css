@@ -82,7 +82,7 @@ body {
     z-index: 2;
     
     margin-left: -10px;
-    border: 6px solid white;
+    border: 6px solid transparent;
 }
 
 #toggle-left-col {
@@ -90,10 +90,8 @@ body {
     left: 150px;
 }
 
-#toggle-left-col::before {
-    border-left-color: transparent;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
+#toggle-left-col:hover::before {
+    border-right-color: white;
 }
 
 #toggle-right-col {
@@ -101,10 +99,8 @@ body {
     right: 340px;
 }
 
-#toggle-right-col::before {
-    border-right-color: transparent;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
+#toggle-right-col:hover::before {
+    border-left-color: white;
 }
 
 #content {
