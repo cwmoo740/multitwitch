@@ -1,0 +1,26 @@
+{
+  "name": "multitwitch",
+  "version": "1.0.0",
+  "homepage": "https://github.com/cwmoo740/multitwitch",
+  "authors": [
+    "cowmoo <cwmoo740@gmail.com>"
+  ],
+  "description": "angular SPA for twitch.tv watching",
+  "main": "js/app.js",
+  "keywords": [
+    "twitch",
+    "angular",
+    "cwmoo740"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.5"
+  }
+}

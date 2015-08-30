@@ -1,16 +1,16 @@
-/*
-@media screen and (min-width: 35.5em) sm
-@media screen and (min-width: 48em) md
-@media screen and (min-width: 64em) lg
-@media screen and (min-width: 80em) xl
-*/
+@import 'variables.scss';
+@import 'mixins.scss';
+
 body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  display: flex; }
-  body > .pure-g {
-    flex-grow: 1; }
+  display: flex;
+
+  & > .pure-g {
+    flex-grow: 1;
+  }
+}
 
 .toggle-column {
   position: absolute;
@@ -18,31 +18,37 @@ body {
   height: 2rem;
   visibility: visible;
   background-color: yellow;
-  z-index: 999; }
+  z-index: 999;
+}
 
 .left-col {
   width: 150px;
   height: 100%;
   background-color: orange;
   flex-grow: 0;
-  position: relative; }
-  .left-col .toggle-column {
+  position: relative;
+  .toggle-column {
     top: 0;
-    right: 0; }
-  .left-col.ng-hide:not(.ng-hide-animate) {
+    right: 0;
+  }
+  &.ng-hide:not(.ng-hide-animate) {
     display: initial !important;
     width: 0;
-    visibility: hidden; }
-    .left-col.ng-hide:not(.ng-hide-animate) .toggle-column {
+    visibility: hidden;
+    .toggle-column {
       display: block !important;
       top: 0;
       right: 0;
-      transform: translateX(100%); }
+      transform: translateX(100%);
+    }
+  }
+}
 
 .right-col {
   flex-grow: 1;
   display: flex;
-  height: 100%; }
+  height: 100%;
+}
 
 .streams {
   flex-grow: 4;
@@ -51,48 +57,59 @@ body {
   background-color: blue;
   align-items: stretch;
   align-content: stretch;
-  height: 100%; }
+  height: 100%;
+}
 
 .stream {
   min-width: 50%;
   flex-grow: 1;
-  position: relative; }
+  position: relative;
+}
 
 .chat {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 340px; }
-  .chat .toggle-column {
+  width: $chat-width;
+  .toggle-column {
     top: 0;
     left: 0;
-    transform: translateX(-100%); }
-  .chat.ng-hide:not(.ng-hide-animate) {
+    transform: translateX(-100%);
+  }
+  &.ng-hide:not(.ng-hide-animate) {
     display: initial !important;
     width: 0;
-    visibility: hidden; }
-    .chat.ng-hide:not(.ng-hide-animate) .toggle-column {
+    visibility: hidden;
+    .toggle-column {
       display: block !important;
       top: 0;
-      left: 0; }
+      left: 0;
+    }
+  }
+}
 
 .active-stream {
   background-color: blue;
-  flex-grow: 4; }
+  flex-grow: 4;
+}
 
 .alternate-streams {
   background-color: purple;
   position: relative;
-  flex-grow: 1; }
-  .alternate-streams .toggle-column {
+  flex-grow: 1;
+  .toggle-column {
     top: 0;
     left: 50%;
-    transform: translateY(-100%); }
+    transform: translateY(-100%);
+  }
+}
 
 .active-chat {
   background-color: green;
-  flex-grow: 4; }
+  flex-grow: 4;
+}
 
 .chat-selector {
   background-color: tomato;
-  flex-grow: 1; }
+  flex-grow: 1;
+}
