@@ -1,4 +1,4 @@
-var multiTwitchApp = angular.module('multiTwitchApp', []);
+var multiTwitchApp = angular.module('multiTwitchApp', ['angularjs.media.directives']);
 
 function StreamException(error) {
     this.error = error;
@@ -114,6 +114,7 @@ multiTwitchApp.factory('StreamService', [function () {
         if (streams.indexOf(stream) > -1) {
             return;
         }
+        stream["request_string"] = "channel=RiotGamesBrazil&auto_play=true&start_volume=25";
         streams.unshift(stream);
         if (streams.length > 4) {
             streams.pop();
@@ -169,3 +170,5 @@ angular.module('multiTwitchApp')
             return $sce.trustAsResourceUrl(url);
         };
     }]);
+
+
