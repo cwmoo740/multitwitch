@@ -37,24 +37,32 @@ multiTwitchApp.controller('MenuController', ['$scope', 'StreamService', 'TwitchA
 
 multiTwitchApp.controller('StreamController', ['$scope', 'StreamService',
     function ($scope, StreamService) {
-        $scope.streamHeight = function(index) {
-            if ($scope.streams.length > 1) {
-                return {height: '50%'};
+        $scope.streamStyle = function (index) {
+            switch($scope.streams.length) {
+                case 1:
+                    return {height: '100%', width: '100%'};
+                case 2:
+                    return {height: '50%', width: '100%'};
+                case 3:
+                    if (index === 0) {
+                        return {height: '50%', width: '100%'};
+                    }
+                    return {height: '50%', width: '50%'};
+                case 4:
+                    return {height: '50%'};
             }
-            else if ($scope.streams.length === 3 && index === 3){
-                return {height: '50%', width: '100%'};
-            }
-            return {height: '100%'};
         };
         $scope.streams = StreamService.getStreams();
     }]);
 
-multiTwitchApp.controller('ChatController', ['$scope', function ($scope) {
-    $scope.toggleChat = function () {
-        $scope.chatVisible = !$scope.chatVisible;
-    };
-    $scope.chatVisible = false;
-}]);
+multiTwitchApp.controller('ChatController', ['$scope', 'StreamService',
+    function ($scope, StreamService) {
+        $scope.toggleChat = function () {
+            $scope.chatVisible = !$scope.chatVisible;
+        };
+        $scope.streams = StreamService.getStreams();
+        $scope.chatVisible = false;
+    }]);
 /*
  multiTwitchApp.controller('multiTwitchController', function ($scope, dataFactory) {
 
@@ -115,9 +123,9 @@ multiTwitchApp.factory('StreamService', [function () {
             return;
         }
         stream["request_string"] = "channel=RiotGamesBrazil&auto_play=true&start_volume=25";
-        streams.unshift(stream);
+        streams.push(stream);
         if (streams.length > 4) {
-            streams.pop();
+            streams.splice(0,1);
         }
 
         return streams;

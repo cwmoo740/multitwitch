@@ -2,33 +2,7 @@ angular.module('angularjs.media.directives', [])
     .config(function () {
         if (!-[1,]) {
             document.createElement('twitch');
-            document.createElement('justin');
-            document.createElement('flash');
-            document.createElement('youtube');
         }
-    })
-    .value('MediaFlashPlayerEmbed', function () {
-        'use strict';
-        return {
-            scope: {
-                src: "@"
-            },
-            restrict: 'E',
-            replace: true,
-            template: '<object data="{{src}}" type="application/x-shockwave-flash">' +
-            '<param name="allowscriptaccess" value="always" />' +
-            '<param name="allowfullscreen" value="true" />' +
-            '<param name="wmode" value="transparent" />' +
-            '</object>',
-            compile: function (elem, attrs, transcludeFn) {
-                return function link(scope, element, attrs) {
-                    // Prevent error when the flash player connect source before scope.channel unready. (e.g. When ng-view)
-                    scope.$watch('src', function (src) {
-                        element.append('<param name="movie" value="' + src + '" />');
-                    });
-                };
-            }
-        };
     })
     .value('MediaJustinLiveStreamPlayer', function (configure) {
         'use strict';
@@ -82,83 +56,9 @@ angular.module('angularjs.media.directives', [])
             }
         };
     })
-    .value('YoutubePlayerEmbed', function () {
-        'use strict';
-        return {
-            scope: {
-                autoplay: "=",
-                start: "=",
-                end: "=",
-                params: "@",
-                v: "@"
-            },
-            restrict: 'E',
-            replace: true,
-            template: '<iframe ng-src="http://www.youtube.com/embed/{{v}}{{querys}}" frameborder="0" allowfullscreen></iframe>',
-            compile: function (elem, attrs, transcludeFn) {
-                return function link(scope, element, attrs) {
-                    var
-                        paramsObject = {},
-                        paramsString = '';
-
-                    attrs.$observe('v', function (v) {
-                        scope.v = v;
-                    });
-
-                    // If <youtube params=""> already setup, then passing variable directly.
-                    if (attrs.params) {
-                        scope.querys = attrs.params;
-                        return;
-                    }
-
-                    // Else make querys.
-                    if (scope.autoplay) {
-                        paramsObject.autoplay = 1;
-                    }
-
-                    if (scope.start) {
-                        paramsObject.start = scope.start;
-                    }
-
-                    if (scope.end) {
-                        paramsObject.end = scope.end;
-                    }
-
-                    angular.forEach(paramsObject, function (value, key) {
-                        paramsString = paramsString + key + '=' + value + '&';
-                    });
-
-                    if ('' !== paramsString) {
-                        scope.querys = '?' + paramsString;
-                    }
-                };
-            }
-        };
-    })
-    .directive('youtube', function factory(YoutubePlayerEmbed) {
-        return YoutubePlayerEmbed();
-    })
-    .directive('flash', function factory(MediaFlashPlayerEmbed) {
-        return MediaFlashPlayerEmbed();
-    })
-    .directive('justin', function factory(MediaJustinLiveStreamPlayer) {
-        return MediaJustinLiveStreamPlayer({
-            type: 'justin'
-        });
-    })
     .directive('twitch', function factory(MediaJustinLiveStreamPlayer) {
         return MediaJustinLiveStreamPlayer({
             type: 'twitch'
-        });
-    })
-    .directive('justinChat', function factory(MediaJustinLiveStreamChatroom) {
-        return MediaJustinLiveStreamChatroom({
-            type: 'justin'
-        });
-    })
-    .directive('justinChatChannel', function factory(MediaJustinLiveStreamChatroom) {
-        return MediaJustinLiveStreamChatroom({
-            type: 'justin'
         });
     })
     .directive('twitchChat', function factory(MediaJustinLiveStreamChatroom) {
