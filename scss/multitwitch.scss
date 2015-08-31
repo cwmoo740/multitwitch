@@ -56,13 +56,17 @@ body {
     height: 3rem;
     align-items: center;
     justify-content: center;
-    background-color: $twitch-dark-gray;
-    color: $twitch-light-gray;
+    color: $twitch-dark-gray;
+    background-color: $twitch-light-gray;
+    &:hover {
+      background-color: red;
+      cursor: pointer;
+    }
   }
   .menu-list {
     border-bottom: 1px solid white;
-    background-color: $twitch-light-gray;
-    color: $twitch-dark-gray;
+    color: $twitch-light-gray;
+    background-color: $twitch-dark-gray;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -73,6 +77,10 @@ body {
       align-items: center;
       justify-content: center;
       flex-grow: 1;
+      &:hover {
+        background-color: red;
+        cursor: pointer;
+      }
       & a {
         text-align: center;
         max-width: 90%;
@@ -230,6 +238,7 @@ body {
   height: 100%;
   width: $chat-width;
   .top-bar {
+    position: absolute;
     top: 0;
     left: 0;
     width: $chat-width;

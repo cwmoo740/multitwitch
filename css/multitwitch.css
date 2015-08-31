@@ -77,12 +77,15 @@ body {
     -webkit-justify-content: center;
     -ms-flex-pack: center;
     justify-content: center;
-    background-color: #19191f;
-    color: #797987; }
+    color: #19191f;
+    background-color: #797987; }
+    .left-col .menu-button:hover {
+      background-color: red;
+      cursor: pointer; }
   .left-col .menu-list {
     border-bottom: 1px solid white;
-    background-color: #797987;
-    color: #19191f;
+    color: #797987;
+    background-color: #19191f;
     -webkit-box-flex: 1;
     -webkit-flex-grow: 1;
     -ms-flex-positive: 1;
@@ -115,6 +118,9 @@ body {
       -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
       flex-grow: 1; }
+      .left-col .menu-list > div:hover {
+        background-color: red;
+        cursor: pointer; }
       .left-col .menu-list > div a {
         text-align: center;
         max-width: 90%;
@@ -277,6 +283,7 @@ body {
   height: 100%;
   width: 340px; }
   .chat .top-bar {
+    position: absolute;
     top: 0;
     left: 0;
     width: 340px;
