@@ -43,7 +43,16 @@ multiTwitchApp.controller('StreamController', ['$scope', 'StreamService', 'UISer
         $scope.deleteStream = function(stream) {
             StreamService.deleteStream(stream);
         };
+        $scope.setActiveStream = function(stream) {
+            if ($scope.activeStream._id === stream._id) {
+                StreamService.demoteStream();
+            }
+            else {
+                StreamService.setActiveStream(stream);
+            }
+        };
         $scope.streams = StreamService.getStreams();
+        $scope.activeStream = StreamService.getActiveStream();
         $scope.timer = null;
     }]);
 
@@ -57,12 +66,13 @@ multiTwitchApp.controller('ChatController', ['$scope', 'StreamService',
         };
         $scope.streams = StreamService.getStreams();
         $scope.activeChat = StreamService.getActiveChat();
-        $scope.chatVisible = false;
+        $scope.chatVisible = true;
     }]);
 
 multiTwitchApp.factory('StreamService', [function () {
     var streams = [];
     var activeChat = {_id: -1};
+    var activeStream = {active: false};
     this.getStreams = function () {
         return streams;
     };
@@ -78,13 +88,12 @@ multiTwitchApp.factory('StreamService', [function () {
         }
         streams.push(stream);
         if (streams.length > 4) {
-            streams.splice(0, 1);
+            this.deleteStream(streams[0]);
         }
-        if (streams.length === 1) {
+        else if (streams.length === 1) {
             activeChat._id = stream._id;
         }
-
-        return streams;
+        console.log(activeStream);
     };
     this.deleteStream = function (stream) {
         var index = streams.indexOf(stream);
@@ -98,7 +107,24 @@ multiTwitchApp.factory('StreamService', [function () {
         else if (activeChat._id === stream._id) {
             activeChat._id = streams[0]._id;
         }
-        return streams;
+        if (activeStream._id === stream._id) {
+            this.demoteStream();
+        }
+    };
+    this.getActiveStream = function() {
+        return activeStream;
+    };
+    this.setActiveStream = function (stream) {
+        var index = streams.indexOf(stream);
+        if (index === -1) {
+            throw new StreamException('Promoting a non-existent stream');
+        }
+        activeStream._id = stream._id;
+        activeStream.active = true;
+    };
+    this.demoteStream = function() {
+        delete activeStream._id;
+        activeStream.active = false;
     };
     return this;
 }]);

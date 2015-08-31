@@ -15,19 +15,19 @@
 
 <!-- begin left menu -->
 <div class="left-col" ng-show="menuVisible" ng-controller="MenuController" ng-cloak>
-    <span ng-click="selectDetailView('games')">Games</span>
-    <ul ng-show="detailView === 'games'">
-        <li ng-repeat="game in gameData.top" ng-click="getStreamData(game.game)">
-            {{game.game.name}}
-        </li>
-    </ul>
-    <span ng-click="selectDetailView('streams')">Streams</span>
-    <ul ng-show="detailView === 'streams'">
-        <li ng-repeat="stream in streamData.streams"
+    <div ng-click="selectDetailView('games')" class="menu-button"><a>Games</a></div>
+    <div ng-show="detailView === 'games'" class="menu-list">
+        <div ng-repeat="game in gameData.top" ng-click="getStreamData(game.game)">
+            <a>{{game.game.name}}</a>
+        </div>
+    </div>
+    <div ng-show="streamData.streams.length > 0" ng-click="selectDetailView('streams')" class="menu-button"><a>Streams</a></div>
+    <div ng-show="detailView === 'streams'" class="menu-list">
+        <div ng-repeat="stream in streamData.streams"
             ng-click="addStream(stream)">
-            {{stream.channel.name}}
-        </li>
-    </ul>
+            <a>{{stream.channel.name}}</a>
+        </div>
+    </div>
     <a class="toggle-column" ng-click="toggleMenu()"></a>
 </div>
 <!-- end left menu -->
@@ -35,31 +35,20 @@
 
 <!-- begin main content -->
 <div class="right-col">
-    <div class="streams" ng-controller="StreamController">
-        <div ng-repeat="stream in streams" class="stream">
+    <div class="streams" ng-controller="StreamController" ng-mousemove="showToggles()">
+        <div ng-repeat="stream in streams" class="stream"
+             ng-class="{active: stream._id === activeStream._id, inactive: activeStream.active === true && stream._id !== activeStream._id}">
             <div ng-repeat="a in (((b=[]).length=3)&&b) track by $index" class="iframe-click-blocker"
-                 ng-mousemove="showToggles()"></div>
+                 ng-mousemove="showToggles()" ng-dblclick="setActiveStream(stream)"></div>
             <iframe id="player" type="text/html" width="100%" height="100%"
                     ng-src="{{stream.channel.url + '/embed' | trusted}}" frameborder="0">
                 {{stream.channel.url}}
             </iframe>
-            <a class="close-stream" ng-click="deleteStream(stream)"></a>
+            <a class="close-stream" ng-click="deleteStream(stream)"><span ng-if="stream._id === activeStream._id">ACTIVE</span></a>
         </div>
-        <!--
-        TODO
-        for now just treat all streams equally
-        <div class="active-stream">
-
-        </div>
-        <div class="alternate-streams">
-
-            <a class="toggle-column"></a>
-
-        </div>
-        -->
     </div>
-    <div class="chat-menu" ng-show="chatVisible && streams.length > 0" ng-controller="ChatController" ng-cloak>
-        <div class="chat">
+    <div class="chat-menu" ng-show="chatVisible" ng-controller="ChatController" ng-cloak>
+        <div class="chat" ng-if="streams.length > 0">
             <div class="top-bar">
                 <div ng-repeat="stream in streams"
                      ng-click="setActiveChat(stream)" ng-class="{active: stream._id === activeChat._id}">
