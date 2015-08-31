@@ -14,11 +14,18 @@ body {
 
 .toggle-column {
   position: absolute;
-  width: 2rem;
-  height: 2rem;
-  visibility: visible;
-  background-color: yellow;
+  top: 25%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  opacity: 0;
   z-index: 999;
+  &.active {
+    opacity: 1;
+  }
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .left-col {
@@ -28,18 +35,17 @@ body {
   flex-grow: 0;
   position: relative;
   .toggle-column {
-    top: 0;
     right: 0;
+    transform: translate(100%, -100%);
+    border-width: 2rem 0 2rem 2rem;
+    border-color: transparent transparent transparent #007bff;
   }
   &.ng-hide:not(.ng-hide-animate) {
     display: initial !important;
     width: 0;
     visibility: hidden;
     .toggle-column {
-      display: block !important;
-      top: 0;
-      right: 0;
-      transform: translateX(100%);
+      visibility: visible;
     }
   }
 }
@@ -60,55 +66,137 @@ body {
   height: 100%;
 }
 
-.stream {
-  width: 50%;
-  position: relative;
+.iframe-click-blocker {
+  background-color: transparent;
+  position: absolute;
 }
 
-.chat {
+.iframe-click-blocker:first-child {
+  width: 100%;
+  bottom: 118px;
+  top: 0;
+  left: 0;
+}
+
+.iframe-click-blocker:nth-child(2) {
+  left: 0;
+  bottom: 28px;
+  right: 113px;
+  top: 0;
+}
+
+.iframe-click-blocker:nth-child(3) {
+  right: 0;
+  bottom: 28px;
+  width: 52px;
+  top: 0;
+}
+
+.stream {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  &:nth-last-child(4):first-child {
+    height: 50%;
+    width: 50%;
+    & ~ .stream {
+      height: 50%;
+      width: 50%;
+    }
+  }
+  &:nth-last-child(3):first-child {
+    width: 100%;
+    height: 50%;
+    & ~ .stream {
+      height: 50%;
+      width: 50%;
+    }
+  }
+  &:nth-last-child(2):first-child {
+    height: 50%;
+    & ~ .stream {
+      height: 50%;
+    }
+  }
+}
+
+.close-stream {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4rem;
+  height: 4rem;
+  background-color: red;
+}
+
+.chat-menu {
   position: relative;
   display: flex;
   flex-direction: column;
   width: $chat-width;
+  height: 100%;
   .toggle-column {
-    top: 0;
     left: 0;
-    transform: translateX(-100%);
+    transform: translate(-100%, -100%);
+    border-width: 2rem 2rem 2rem 0;
+    border-color: transparent #007bff transparent transparent;
   }
   &.ng-hide:not(.ng-hide-animate) {
     display: initial !important;
     width: 0;
     visibility: hidden;
     .toggle-column {
-      display: block !important;
-      top: 0;
-      left: 0;
+      visibility: visible;
     }
   }
 }
 
-.active-stream {
-  background-color: blue;
-  flex-grow: 4;
-}
-
-.alternate-streams {
-  background-color: purple;
-  position: relative;
-  flex-grow: 1;
-  .toggle-column {
+.chat {
+  background-color: green;
+  height: 100%;
+  width: $chat-width;
+  .top-bar {
+    position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateY(-100%);
+    left: 0;
+    width: $chat-width;
+    height: 49px;
+    background-color: #19191f;
   }
 }
 
-.active-chat {
-  background-color: green;
-  flex-grow: 4;
+.chat-iframe-wrapper {
+  height: 100%;
+  width: 100%;
 }
 
-.chat-selector {
-  background-color: tomato;
-  flex-grow: 1;
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  div:nth-last-child(4):first-child ~ div {
+    width: 50%;
+  }
+  div:nth-last-child(4):first-child {
+    width: 50%;
+  }
+  div {
+    flex-grow: 1;
+    color: #797987;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    &:hover {
+      background-color: white;
+    }
+    span {
+      padding: 0.2rem;
+    }
+  }
+  & div.active {
+    color: red;
+  }
 }

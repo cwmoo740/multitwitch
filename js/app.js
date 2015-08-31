@@ -1,4 +1,4 @@
-var multiTwitchApp = angular.module('multiTwitchApp', ['angularjs.media.directives']);
+var multiTwitchApp = angular.module('multiTwitchApp', []);
 
 function StreamException(error) {
     this.error = error;
@@ -35,24 +35,16 @@ multiTwitchApp.controller('MenuController', ['$scope', 'StreamService', 'TwitchA
         $scope.getGameData();
     }]);
 
-multiTwitchApp.controller('StreamController', ['$scope', 'StreamService',
-    function ($scope, StreamService) {
-        $scope.streamStyle = function (index) {
-            switch($scope.streams.length) {
-                case 1:
-                    return {height: '100%', width: '100%'};
-                case 2:
-                    return {height: '50%', width: '100%'};
-                case 3:
-                    if (index === 0) {
-                        return {height: '50%', width: '100%'};
-                    }
-                    return {height: '50%', width: '50%'};
-                case 4:
-                    return {height: '50%'};
-            }
+multiTwitchApp.controller('StreamController', ['$scope', 'StreamService', 'UIService',
+    function ($scope, StreamService, UIService) {
+        $scope.showToggles = function () {
+            UIService.showToggles();
+        };
+        $scope.deleteStream = function(stream) {
+            StreamService.deleteStream(stream);
         };
         $scope.streams = StreamService.getStreams();
+        $scope.timer = null;
     }]);
 
 multiTwitchApp.controller('ChatController', ['$scope', 'StreamService',
@@ -60,72 +52,36 @@ multiTwitchApp.controller('ChatController', ['$scope', 'StreamService',
         $scope.toggleChat = function () {
             $scope.chatVisible = !$scope.chatVisible;
         };
+        $scope.setActiveChat = function (stream) {
+            StreamService.setActiveChat(stream);
+        };
         $scope.streams = StreamService.getStreams();
+        $scope.activeChat = StreamService.getActiveChat();
         $scope.chatVisible = false;
     }]);
-/*
- multiTwitchApp.controller('multiTwitchController', function ($scope, dataFactory) {
 
- $scope.functions = {};
- $scope.functions.getGameData = function () {
- dataFactory.getGames().then(
- function (data) {
- $scope.gameData = data;
- });
- };
- $scope.functions.chooseGame = function (game) {
- $scope.activeGame = game;
- $scope.functions.getStreamData(game);
- $scope.activeGame.show = true;
- };
- $scope.functions.clearGame = function () {
- $scope.activeGame = {};
- $scope.activeGame.show = false;
- };
- $scope.functions.getStreamData = function (game) {
- dataFactory.getStreams(game).then(
- function (data) {
- $scope.streamData = data;
- });
- };
- $scope.functions.addStream = function (stream) {
-
- while ($scope.activeStreams.length > 0) {
- $scope.activeStreams.pop();
- }
-
- $scope.activeStreams.push(stream);
- $scope.functions.getStreamData($scope.activeGame);
- };
- $scope.functions.toggleLeftCol = function () {
- $scope.functions.getStreamData($scope.activeGame);
- };
- $scope.functions.toggleRightCol = function () {
-
- };
- // initialization
- $scope.gameData = {};
- $scope.streamData = {};
- $scope.activeGame = {};
- $scope.activeStreams = [];
-
- $scope.functions.getGameData();
- $scope.activeGame.show = false;
- });
- */
 multiTwitchApp.factory('StreamService', [function () {
     var streams = [];
+    var activeChat = {_id: -1};
     this.getStreams = function () {
         return streams;
+    };
+    this.getActiveChat = function () {
+        return activeChat;
+    };
+    this.setActiveChat = function(stream) {
+        activeChat._id = stream._id;
     };
     this.addStream = function (stream) {
         if (streams.indexOf(stream) > -1) {
             return;
         }
-        stream["request_string"] = "channel=RiotGamesBrazil&auto_play=true&start_volume=25";
         streams.push(stream);
         if (streams.length > 4) {
-            streams.splice(0,1);
+            streams.splice(0, 1);
+        }
+        if (streams.length === 1) {
+            activeChat._id = stream._id;
         }
 
         return streams;
@@ -136,6 +92,12 @@ multiTwitchApp.factory('StreamService', [function () {
             throw new StreamException('Deleting a non-existent stream');
         }
         streams.splice(index, 1);
+        if (streams.length === 0) {
+            activeChat._id = -1;
+        }
+        else if (activeChat._id === stream._id) {
+            activeChat._id = streams[0]._id;
+        }
         return streams;
     };
     return this;
@@ -170,6 +132,24 @@ multiTwitchApp.factory('TwitchApi', ['$http', '$q', function ($http, $q) {
     };
 
     return factory;
+}]);
+
+multiTwitchApp.factory('UIService', ['$window', '$timeout', function ($window, $timeout) {
+    var timer = null;
+    this.showToggles = function() {
+        var toggles = angular.element($window.document.getElementsByClassName("toggle-column"));
+        toggles.addClass('active');
+
+        if (timer !== null) {
+            $timeout.cancel(timer);
+            timer = null;
+        }
+
+        timer = $timeout(function () {
+            toggles.removeClass('active');
+        }, 1000);
+    };
+    return this;
 }]);
 
 angular.module('multiTwitchApp')

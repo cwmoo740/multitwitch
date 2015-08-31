@@ -1,6 +1,6 @@
 <!doctype html>
 <html ng-app="multiTwitchApp">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
 <body>
 
 <!-- begin left menu -->
-<div class="left-col" ng-show="menuVisible" ng-controller="MenuController">
+<div class="left-col" ng-show="menuVisible" ng-controller="MenuController" ng-cloak>
     <span ng-click="selectDetailView('games')">Games</span>
     <ul ng-show="detailView === 'games'">
         <li ng-repeat="game in gameData.top" ng-click="getStreamData(game.game)">
@@ -36,8 +36,14 @@
 <!-- begin main content -->
 <div class="right-col">
     <div class="streams" ng-controller="StreamController">
-        <div ng-repeat="stream in streams" class="stream" ng-style="streamStyle($index)">
-            <twitch width="100%" height="100%" channel={{stream.channel.name}}></twitch>
+        <div ng-repeat="stream in streams" class="stream">
+            <div ng-repeat="a in (((b=[]).length=3)&&b) track by $index" class="iframe-click-blocker"
+                 ng-mousemove="showToggles()"></div>
+            <iframe id="player" type="text/html" width="100%" height="100%"
+                    ng-src="{{stream.channel.url + '/embed' | trusted}}" frameborder="0">
+                {{stream.channel.url}}
+            </iframe>
+            <a class="close-stream" ng-click="deleteStream(stream)"></a>
         </div>
         <!--
         TODO
@@ -52,14 +58,21 @@
         </div>
         -->
     </div>
-    <div class="chat" ng-show="chatVisible" ng-controller="ChatController">
-        <div class="active-chat">
-            <iframe ng-if="streams.length > 0" width="100%" height="100%" twitch-chat channel={{streams[0].channel.name}}></iframe>
+    <div class="chat-menu" ng-show="chatVisible && streams.length > 0" ng-controller="ChatController" ng-cloak>
+        <div class="chat">
+            <div class="top-bar">
+                <div ng-repeat="stream in streams"
+                     ng-click="setActiveChat(stream)" ng-class="{active: stream._id === activeChat._id}">
+                    <span>{{stream.channel.name}}</span>
+                </div>
+            </div>
+            <div class="chat-iframe-wrapper" ng-repeat="stream in streams"
+                 ng-show="stream._id === activeChat._id">
+            <iframe frameborder="0" scrolling="no" id="chat_embed"
+                    ng-src="{{stream.channel.url + '/chat' | trusted}}" height="100%" width="100%"></iframe>
+            </div>
         </div>
-        <div class="chat-selector">
-            <p ng-repeat="stream in streams">{{stream.channel.name}}</p>
-        </div>
-        <a class="toggle-column" ng-click="toggleChat()"></a>
+        <a class="toggle-column" ng-click="toggleChat()" ng-if="streams.length > 0"></a>
     </div>
     <!--
     <div class="stream-container" ng-if="activeStreams.length > 0" ng-repeat="stream in activeStreams">
@@ -73,6 +86,5 @@
 <!--end main content -->
 
 </body>
-<script src="js/angularjs.media.directives.js"></script>
 <script src="js/app.js"></script>
 </html>
