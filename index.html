@@ -44,7 +44,7 @@
                     ng-src="{{stream.channel.url + '/embed' | trusted}}" frameborder="0">
                 {{stream.channel.url}}
             </iframe>
-            <a class="close-stream" ng-click="deleteStream(stream)"><span ng-if="stream._id === activeStream._id">ACTIVE</span></a>
+            <a class="close-stream" ng-click="deleteStream(stream)"></a>
         </div>
     </div>
     <div class="chat-menu" ng-show="chatVisible" ng-controller="ChatController" ng-cloak>
