@@ -1,6 +1,7 @@
 <!doctype html>
 <html ng-app="multiTwitchApp">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +33,6 @@
 </div>
 <!-- end left menu -->
 
-
 <!-- begin main content -->
 <div class="right-col">
     <div class="streams" ng-controller="StreamController" ng-mousemove="showToggles()">
@@ -63,14 +63,6 @@
         </div>
         <a class="toggle-column" ng-click="toggleChat()" ng-if="streams.length > 0"></a>
     </div>
-    <!--
-    <div class="stream-container" ng-if="activeStreams.length > 0" ng-repeat="stream in activeStreams">
-        <iframe id="player" type="text/html" width="100%" height="100%"
-                ng-src="{{stream.channel.url + '/embed' | trusted}}" frameborder="0">
-            {{stream.channel.url}}
-        </iframe>
-    </div>
-    -->
 </div>
 <!--end main content -->
 

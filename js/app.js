@@ -1,43 +1,62 @@
-var multiTwitchApp = angular.module('multiTwitchApp', []);
+var multiTwitchApp = angular.module('multiTwitchApp', ['ngRoute']);
 
 function StreamException(error) {
     this.error = error;
     this.name = 'StreamException';
 }
 
-multiTwitchApp.controller('MenuController', ['$scope', 'StreamService', 'TwitchApi',
-    function ($scope, StreamService, TwitchApi) {
-        $scope.getGameData = function () {
-            TwitchApi.getGames().then(
-                function (data) {
-                    $scope.gameData = data;
-                });
-        };
-        $scope.getStreamData = function (game) {
-            TwitchApi.getStreams(game).then(
-                function (data) {
-                    $scope.streamData = data;
-                    $scope.detailView = 'streams';
-                });
-        };
-        $scope.toggleMenu = function () {
-            $scope.menuVisible = !$scope.menuVisible;
-        };
-        $scope.selectDetailView = function (view_name) {
-            $scope.detailView = view_name;
-        };
-        $scope.addStream = function (stream) {
-            StreamService.addStream(stream);
-        };
+function filterLocation(location) {
+    return location.split("/").filter(function (streamer) {
+        return streamer && streamer.length;
+    }).splice(0, 4);
+}
 
-        $scope.detailView = 'games';
-        $scope.menuVisible = true;
-        $scope.getGameData();
-    }]);
+multiTwitchApp.controller('MenuController',
+    ['$scope', 'StreamService', 'TwitchApi', '$location',
+        function($scope, StreamService, TwitchApi, $location) {
+            $scope.getGameData = function() {
+                TwitchApi.getGames().then(
+                    function(data) {
+                        $scope.gameData = data;
+                    });
+            };
+            $scope.getStreamData = function(game) {
+                TwitchApi.getStreams(game).then(
+                    function(data) {
+                        $scope.streamData = data;
+                        $scope.detailView = 'streams';
+                    });
+            };
+            $scope.toggleMenu = function() {
+                $scope.menuVisible = !$scope.menuVisible;
+            };
+            $scope.selectDetailView = function(view_name) {
+                $scope.detailView = view_name;
+            };
+            $scope.addStream = function(stream) {
+                console.log("adding stream, ", stream);
+                StreamService.addStream(stream);
+            };
+
+            $scope.detailView = 'games';
+            $scope.menuVisible = true;
+
+            // load streams on first page load
+            var streamers = filterLocation($location.path());
+            streamers.forEach(function(streamer) {
+                TwitchApi.getPlayerStream(streamer).then(
+                    function(stream) {
+                        if (!stream.stream) return;
+                        StreamService.addStream(stream.stream);
+                    }
+                );
+            });
+            $scope.getGameData();
+        }]);
 
 multiTwitchApp.controller('StreamController', ['$scope', 'StreamService', 'UIService',
-    function ($scope, StreamService, UIService) {
-        $scope.showToggles = function () {
+    function($scope, StreamService, UIService) {
+        $scope.showToggles = function() {
             UIService.showToggles();
         };
         $scope.deleteStream = function(stream) {
@@ -57,11 +76,11 @@ multiTwitchApp.controller('StreamController', ['$scope', 'StreamService', 'UISer
     }]);
 
 multiTwitchApp.controller('ChatController', ['$scope', 'StreamService',
-    function ($scope, StreamService) {
-        $scope.toggleChat = function () {
+    function($scope, StreamService) {
+        $scope.toggleChat = function() {
             $scope.chatVisible = !$scope.chatVisible;
         };
-        $scope.setActiveChat = function (stream) {
+        $scope.setActiveChat = function(stream) {
             StreamService.setActiveChat(stream);
         };
         $scope.streams = StreamService.getStreams();
@@ -69,20 +88,26 @@ multiTwitchApp.controller('ChatController', ['$scope', 'StreamService',
         $scope.chatVisible = true;
     }]);
 
-multiTwitchApp.factory('StreamService', [function () {
+multiTwitchApp.service('StreamService', ['$location', function($location) {
     var streams = [];
     var activeChat = {_id: -1};
     var activeStream = {active: false};
-    this.getStreams = function () {
+
+    var setPath = function() {
+        $location.path(streams.reduce(function(acc, stream) {
+            return acc + "/" + stream.channel.name;
+        }, ""));
+    };
+    this.getStreams = function() {
         return streams;
     };
-    this.getActiveChat = function () {
+    this.getActiveChat = function() {
         return activeChat;
     };
     this.setActiveChat = function(stream) {
         activeChat._id = stream._id;
     };
-    this.addStream = function (stream) {
+    this.addStream = function(stream) {
         if (streams.indexOf(stream) > -1) {
             return;
         }
@@ -93,9 +118,9 @@ multiTwitchApp.factory('StreamService', [function () {
         else if (streams.length === 1) {
             activeChat._id = stream._id;
         }
-        console.log(activeStream);
+        setPath();
     };
-    this.deleteStream = function (stream) {
+    this.deleteStream = function(stream) {
         var index = streams.indexOf(stream);
         if (index === -1) {
             throw new StreamException('Deleting a non-existent stream');
@@ -110,11 +135,12 @@ multiTwitchApp.factory('StreamService', [function () {
         if (activeStream._id === stream._id) {
             this.demoteStream();
         }
+        setPath();
     };
     this.getActiveStream = function() {
         return activeStream;
     };
-    this.setActiveStream = function (stream) {
+    this.setActiveStream = function(stream) {
         var index = streams.indexOf(stream);
         if (index === -1) {
             throw new StreamException('Promoting a non-existent stream');
@@ -126,41 +152,48 @@ multiTwitchApp.factory('StreamService', [function () {
         delete activeStream._id;
         activeStream.active = false;
     };
-    return this;
 }]);
 
-multiTwitchApp.factory('TwitchApi', ['$http', '$q', function ($http, $q) {
+multiTwitchApp.service('TwitchApi', ['$http', '$q', function($http, $q) {
 
-    var factory = {};
-
-    factory.getGames = function () {
+    this.getGames = function() {
         var deferred = $q.defer();
         $http.jsonp('https://api.twitch.tv/kraken/games/top?callback=JSON_CALLBACK').
-            success(function (data) {
-                deferred.resolve(data);
-            }).
-            error(function () {
-                deferred.reject();
-            });
+        success(function(data) {
+            deferred.resolve(data);
+        }).
+        error(function() {
+            deferred.reject();
+        });
         return deferred.promise;
     };
 
-    factory.getStreams = function (game) {
+    this.getStreams = function(game) {
         var deferred = $q.defer();
         $http.jsonp('https://api.twitch.tv/kraken/streams?game=' + game.name + '&callback=JSON_CALLBACK').
-            success(function (data) {
-                deferred.resolve(data);
-            }).
-            error(function () {
-                deferred.reject();
-            });
+        success(function(data) {
+            deferred.resolve(data);
+        }).
+        error(function() {
+            deferred.reject();
+        });
         return deferred.promise;
     };
 
-    return factory;
+    this.getPlayerStream = function(player) {
+        var deferred = $q.defer();
+        $http.jsonp('https://api.twitch.tv/kraken/streams/' + player + '?callback=JSON_CALLBACK').
+        success(function(data) {
+            deferred.resolve(data);
+        }).
+        error(function() {
+            deferred.reject();
+        });
+        return deferred.promise;
+    };
 }]);
 
-multiTwitchApp.factory('UIService', ['$window', '$timeout', function ($window, $timeout) {
+multiTwitchApp.factory('UIService', ['$window', '$timeout', function($window, $timeout) {
     var timer = null;
     this.showToggles = function() {
         var toggles = angular.element($window.document.getElementsByClassName("toggle-column"));
@@ -168,10 +201,9 @@ multiTwitchApp.factory('UIService', ['$window', '$timeout', function ($window, $
 
         if (timer !== null) {
             $timeout.cancel(timer);
-            timer = null;
         }
 
-        timer = $timeout(function () {
+        timer = $timeout(function() {
             toggles.removeClass('active');
         }, 1000);
     };
@@ -179,8 +211,8 @@ multiTwitchApp.factory('UIService', ['$window', '$timeout', function ($window, $
 }]);
 
 angular.module('multiTwitchApp')
-    .filter('trusted', ['$sce', function ($sce) {
-        return function (url) {
+    .filter('trusted', ['$sce', function($sce) {
+        return function(url) {
             return $sce.trustAsResourceUrl(url);
         };
     }]);
