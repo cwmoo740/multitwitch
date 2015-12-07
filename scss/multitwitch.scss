@@ -116,29 +116,11 @@ body {
 }
 
 .iframe-click-blocker {
-  background-color: transparent;
   position: absolute;
-}
-
-.iframe-click-blocker:first-child {
   width: 100%;
-  bottom: 118px;
   top: 0;
   left: 0;
-}
-
-.iframe-click-blocker:nth-child(2) {
-  left: 0;
-  bottom: 28px;
-  right: 113px;
-  top: 0;
-}
-
-.iframe-click-blocker:nth-child(3) {
-  right: 0;
-  bottom: 28px;
-  width: 52px;
-  top: 0;
+  bottom: 0;
 }
 
 .stream {

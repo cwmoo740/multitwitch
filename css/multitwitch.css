@@ -52,7 +52,6 @@ body {
   .left-col .toggle-column {
     right: 0;
     -webkit-transform: translate(100%, -100%);
-    -ms-transform: translate(100%, -100%);
     transform: translate(100%, -100%);
     border-width: 2rem 0 2rem 2rem;
     border-color: transparent transparent transparent darkred; }
@@ -164,26 +163,11 @@ body {
     width: 10%; }
 
 .iframe-click-blocker {
-  background-color: transparent;
-  position: absolute; }
-
-.iframe-click-blocker:first-child {
+  position: absolute;
   width: 100%;
-  bottom: 118px;
   top: 0;
-  left: 0; }
-
-.iframe-click-blocker:nth-child(2) {
   left: 0;
-  bottom: 28px;
-  right: 113px;
-  top: 0; }
-
-.iframe-click-blocker:nth-child(3) {
-  right: 0;
-  bottom: 28px;
-  width: 52px;
-  top: 0; }
+  bottom: 0; }
 
 .stream {
   position: relative;
@@ -267,7 +251,6 @@ body {
   .chat-menu .toggle-column {
     left: 0;
     -webkit-transform: translate(-100%, -100%);
-    -ms-transform: translate(-100%, -100%);
     transform: translate(-100%, -100%);
     border-width: 2rem 2rem 2rem 0;
     border-color: transparent darkred transparent transparent; }
