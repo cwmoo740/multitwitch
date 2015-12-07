@@ -57,6 +57,7 @@ multiTwitchApp.controller('MenuController',
 multiTwitchApp.controller('StreamController', ['$scope', 'StreamService', 'UIService',
     function($scope, StreamService, UIService) {
         $scope.showToggles = function() {
+            console.log("FUCK YOUJ");
             UIService.showToggles();
         };
         $scope.deleteStream = function(stream) {
@@ -208,6 +209,28 @@ multiTwitchApp.factory('UIService', ['$window', '$timeout', function($window, $t
         }, 1000);
     };
     return this;
+}]);
+
+multiTwitchApp.directive('iframeHack', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        compile: function(element, attrs) {
+            var fn = $parse(attrs.iframeHack);
+            var selector = attrs.selector;
+            return function(scope, element) {
+                console.log(element);
+                console.log("FUCKING DIRECTIVES");
+                element[0].addEventListener('mousemove', function(event) {
+                    scope.$apply(function() {
+                        console.log("FUCK");
+                        fn(scope, {
+                            $event: event
+                        });
+                    });
+                }, true);
+            };
+        }
+    }
 }]);
 
 angular.module('multiTwitchApp')

@@ -35,15 +35,14 @@
 
 <!-- begin main content -->
 <div class="right-col">
-    <div class="streams" ng-controller="StreamController" ng-mousemove="showToggles()">
+    <div class="streams" ng-controller="StreamController">
         <div ng-repeat="stream in streams" class="stream"
-             ng-class="{active: stream._id === activeStream._id, inactive: activeStream.active === true && stream._id !== activeStream._id}">
-            <div class="iframe-click-blocker"
+             ng-class="{active: stream._id === activeStream._id,
+             inactive: activeStream.active === true && stream._id !== activeStream._id}">
+            <div ng-repeat="a in (((b=[]).length=2)&&b) track by $index" class="iframe-click-blocker"
                  ng-mousemove="showToggles()" ng-dblclick="setActiveStream(stream)"></div>
-            <iframe ng-src="{{'http://player.twitch.tv/?channel=capcomfighters'| trusted }}"
-                    style="position:absolute;height:100%;width:100%;border:0"
-                    ng-dblclick="setActiveStream(stream)"
-            ng-mousemove="showToggles()">
+            <iframe ng-src="{{'http://player.twitch.tv/?channel=' + stream.channel.name | trusted }}"
+                    style="height:100%;width:100%;border:0">
                 </iframe>
                 <a class="close-stream" ng-click="deleteStream(stream)"></a>
         </div>
